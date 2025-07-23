@@ -17,7 +17,7 @@ model Users {
   id            Int      @id @default(autoincrement())
   firstname     String
   lastname      String
-  email         String
+  email         String   @unique
   student_id    String
   department    String
   password      String
