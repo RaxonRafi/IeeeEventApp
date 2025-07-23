@@ -1,0 +1,116 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+    admin
+    moderator
+    member
+}
+
+model Users {
+  id            Int      @id @default(autoincrement())
+  firstname     String
+  lastname      String
+  email         String
+  student_id    String
+  department    String
+  password      String
+  role          Role @default(member)
+  createdAt DateTime @default(now())
+  comments      Comment[]
+  Like          Like[]
+  dislikes      Dislike[]
+
+}
+model Event {
+  id              Int              @id @default(autoincrement())
+  title           String
+  subtitle        String?
+  description     String
+  date            DateTime
+  startTime       String
+  endTime         String
+  venue           String
+  attendeesCount  Int
+  highlights      Highlight[]      @relation("EventHighlights")
+  speakers        Speaker[]        @relation("EventSpeakers")
+  agendaItems     AgendaItem[]     @relation("EventAgenda")
+  prerequisites   String?
+  registrationFee String
+  tags            Tag[]            @relation("EventTags")
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model Highlight {
+  id      Int    @id @default(autoincrement())
+  text    String
+  eventId Int
+  event   Event  @relation("EventHighlights", fields: [eventId], references: [id])
+}
+
+model Speaker {
+  id        Int    @id @default(autoincrement())
+  name      String
+  title     String
+  imageUrl  String?
+  eventId   Int
+  event     Event  @relation("EventSpeakers", fields: [eventId], references: [id])
+}
+
+model AgendaItem {
+  id        Int    @id @default(autoincrement())
+  startTime String
+  endTime   String
+  topic     String
+  eventId   Int
+  event     Event  @relation("EventAgenda", fields: [eventId], references: [id])
+}
+
+model Tag {
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  events  Event[]  @relation("EventTags")
+}
+
+model Blog {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+  comments  Comment[]
+  likes     Like[]
+  dislikes  Dislike[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  blogId    Int
+  userId    Int
+  blog      Blog     @relation(fields: [blogId], references: [id])
+  user      Users    @relation(fields: [userId], references: [id])
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  blogId    Int
+  userId    Int
+  blog      Blog     @relation(fields: [blogId], references: [id])
+  user      Users    @relation(fields: [userId], references: [id])
+}
+
+model Dislike {
+  id        Int      @id @default(autoincrement())
+  blogId    Int
+  userId    Int
+  blog      Blog     @relation(fields: [blogId], references: [id])
+  user      Users    @relation(fields: [userId], references: [id])
+}
