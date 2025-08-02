@@ -2,7 +2,12 @@ import { IComment } from "./comment.interface";
 import { IDislike } from "./dislike.interface";
 import { ILike } from "./like.interface";
 
-export type Role = "admin" | "moderator" | "member";
+export enum Role{
+  admin = "admin",
+  moderator = "moderator",
+  member = "member",
+}
+
 export interface IUser {
   firstname: string;
   lastname: string;

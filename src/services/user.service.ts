@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { IUser } from "../interfaces/user.interface";
 import bcryptjs from "bcryptjs"
 const prisma = new PrismaClient()
+
 export const createUser= async(payload: Partial<IUser>)=>{
 
     const {    
