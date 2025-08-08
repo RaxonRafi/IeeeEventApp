@@ -10,7 +10,7 @@ const prisma = new PrismaClient()
 declare global {
   namespace Express {
     interface Request {
-      user?: JwtPayload;
+      user?: JwtPayload & { id: number; role: string };
     }
   }
 }
@@ -42,7 +42,7 @@ export const checkAuth =
         throw new Error("Access denied");
       }
 
-      req.user = verifiedToken;
+      req.user = { ...verifiedToken, id: user.id, role: user.role };
 
       next();
     } catch (error) {

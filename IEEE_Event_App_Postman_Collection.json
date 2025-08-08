@@ -1,0 +1,558 @@
+{
+	"info": {
+		"_postman_id": "ieee-event-app-collection",
+		"name": "IEEE Event App API Collection",
+		"description": "Complete API collection for IEEE Event App with all endpoints for testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login with email and password to get JWT token"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstname\": \"John\",\n  \"lastname\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"student_id\": \"STU001\",\n  \"department\": \"Computer Science\",\n  \"password\": \"password123\",\n  \"role\": \"member\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/user/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"register"
+							]
+						},
+						"description": "Register a new user with all required fields"
+					},
+					"response": []
+				},
+				{
+					"name": "Register Admin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstname\": \"Admin\",\n  \"lastname\": \"User\",\n  \"email\": \"admin@example.com\",\n  \"student_id\": \"ADM001\",\n  \"department\": \"Administration\",\n  \"password\": \"password123\",\n  \"role\": \"admin\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/user/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"register"
+							]
+						},
+						"description": "Register an admin user"
+					},
+					"response": []
+				},
+				{
+					"name": "Register Moderator",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstname\": \"Moderator\",\n  \"lastname\": \"User\",\n  \"email\": \"moderator@example.com\",\n  \"student_id\": \"MOD001\",\n  \"department\": \"Moderation\",\n  \"password\": \"password123\",\n  \"role\": \"moderator\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/user/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"register"
+							]
+						},
+						"description": "Register a moderator user"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Events",
+			"item": [
+				{
+					"name": "Get All Events (Public)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/event",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"event"
+							]
+						},
+						"description": "Get all events - public endpoint"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Event (Public)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/event/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"event",
+								"1"
+							]
+						},
+						"description": "Get a single event by ID - public endpoint"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Event (Admin/Moderator)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"IEEE Tech Conference 2025\",\n  \"subtitle\": \"Exploring Future Technologies\",\n  \"description\": \"A comprehensive conference covering latest trends in technology and innovation.\",\n  \"date\": \"2025-09-15T00:00:00.000Z\",\n  \"startTime\": \"09:00\",\n  \"endTime\": \"17:00\",\n  \"venue\": \"Main Auditorium, University Campus\",\n  \"attendeesCount\": 200,\n  \"prerequisites\": \"Basic understanding of programming\",\n  \"registrationFee\": \"$50\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/event",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"event"
+							]
+						},
+						"description": "Create a new event - requires admin or moderator role"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Event (Admin/Moderator)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"IEEE Tech Conference 2025 - Updated\",\n  \"attendeesCount\": 250\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/event/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"event",
+								"1"
+							]
+						},
+						"description": "Update an existing event - requires admin or moderator role"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Event (Admin/Moderator)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/event/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"event",
+								"1"
+							]
+						},
+						"description": "Delete an event - requires admin or moderator role"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Blogs",
+			"item": [
+				{
+					"name": "Get All Blogs (Public)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/blog",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"blog"
+							]
+						},
+						"description": "Get all blogs - public endpoint"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Blog (Public)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/blog/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"blog",
+								"1"
+							]
+						},
+						"description": "Get a single blog by ID - public endpoint"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Blog (Admin/Moderator)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Introduction to Machine Learning\",\n  \"content\": \"Machine Learning is a subset of artificial intelligence that enables computers to learn and improve from experience without being explicitly programmed. In this comprehensive guide, we'll explore the fundamentals of ML and its applications in modern technology.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/blog",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"blog"
+							]
+						},
+						"description": "Create a new blog post - requires admin or moderator role"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Blog (Admin/Moderator)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Advanced Machine Learning Techniques\",\n  \"content\": \"Updated content with advanced ML concepts and practical implementations.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/blog/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"blog",
+								"1"
+							]
+						},
+						"description": "Update an existing blog post - requires admin or moderator role"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Blog (Admin Only)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/blog/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"blog",
+								"1"
+							]
+						},
+						"description": "Delete a blog post - requires admin role only"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Comment (Authenticated)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"blogId\": 1,\n  \"content\": \"Great article! Very informative and well-written. Looking forward to more content like this.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/blog/comment",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"blog",
+								"comment"
+							]
+						},
+						"description": "Add a comment to a blog post - requires authentication (any role)"
+					},
+					"response": []
+				},
+				{
+					"name": "Like Blog (Authenticated)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"blogId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/blog/like",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"blog",
+								"like"
+							]
+						},
+						"description": "Like a blog post - requires authentication (any role)"
+					},
+					"response": []
+				},
+				{
+					"name": "Dislike Blog (Authenticated)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"blogId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/blog/dislike",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"blog",
+								"dislike"
+							]
+						},
+						"description": "Dislike a blog post - requires authentication (any role)"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Health Check",
+			"item": [
+				{
+					"name": "Server Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								""
+							]
+						},
+						"description": "Check if the server is running"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"exec": [
+					""
+				],
+				"type": "text/javascript"
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"exec": [
+					""
+				],
+				"type": "text/javascript"
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5000",
+			"type": "string"
+		},
+		{
+			"key": "authToken",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
