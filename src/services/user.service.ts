@@ -52,6 +52,31 @@ export const createUser= async(payload: Partial<IUser>)=>{
     return user;
 }
 
+const getUserById = async (id: number) => {
+    const user = await prisma.users.findUnique({
+        where: {
+            id: id,
+        },
+        select: {
+            id: true,
+            firstname: true,
+            lastname: true,
+            email: true,
+            student_id: true,
+            department: true,
+            role: true,
+            createdAt: true,
+        },
+    });
+    
+    if (!user) {
+        throw new Error("User not found");
+    }
+    
+    return user;
+}
+
 export const UserService = {
-    createUser
+    createUser,
+    getUserById
 }
