@@ -41,8 +41,59 @@ const createEvent = async (payload: any) => {
   };
   
 
-const getAllEvents = async () => {
+const getAllEvents = async (queryParams: any = {}) => {
+  const { tags, venue, date, search, limit, offset } = queryParams;
+  
+  // Build where clause dynamically
+  const whereClause: any = {};
+  
+  // Filter by tags (multiple tags support)
+  if (tags) {
+    const tagArray = Array.isArray(tags) ? tags : tags.split(',');
+    whereClause.tags = {
+      some: {
+        name: {
+          in: tagArray
+        }
+      }
+    };
+  }
+  
+  // Filter by venue
+  if (venue) {
+    whereClause.venue = {
+      contains: venue,
+      mode: 'insensitive'
+    };
+  }
+  
+  // Filter by date
+  if (date) {
+    whereClause.date = {
+      gte: new Date(date)
+    };
+  }
+  
+  // Search in title and description
+  if (search) {
+    whereClause.OR = [
+      {
+        title: {
+          contains: search,
+          mode: 'insensitive'
+        }
+      },
+      {
+        description: {
+          contains: search,
+          mode: 'insensitive'
+        }
+      }
+    ];
+  }
+  
   return await prisma.event.findMany({
+    where: whereClause,
     include: {
       highlights: true,
       speakers: true,
@@ -52,6 +103,8 @@ const getAllEvents = async () => {
     orderBy: {
       date: "desc",
     },
+    take: limit ? parseInt(limit) : undefined,
+    skip: offset ? parseInt(offset) : undefined,
   });
 };
 
