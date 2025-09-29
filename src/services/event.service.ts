@@ -75,8 +75,35 @@ const updateEvent = async (id: number, payload: any) => {
 };
 
 const deleteEvent = async (id: number) => {
-  return await prisma.event.delete({
-    where: { id },
+  // Use a transaction to ensure all related records are deleted properly
+  return await prisma.$transaction(async (tx) => {
+    // Delete related records first to avoid foreign key constraint violations
+    await tx.highlight.deleteMany({
+      where: { eventId: id },
+    });
+    
+    await tx.speaker.deleteMany({
+      where: { eventId: id },
+    });
+    
+    await tx.agendaItem.deleteMany({
+      where: { eventId: id },
+    });
+    
+    // Disconnect tags (many-to-many relationship)
+    await tx.event.update({
+      where: { id },
+      data: {
+        tags: {
+          set: [], // Remove all tag connections
+        },
+      },
+    });
+    
+    // Finally delete the event
+    return await tx.event.delete({
+      where: { id },
+    });
   });
 };
 
