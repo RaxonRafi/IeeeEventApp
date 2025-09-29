@@ -33,6 +33,7 @@ model Event {
   title           String
   subtitle        String?
   description     String
+  image_url       String?
   date            DateTime
   startTime       String
   endTime         String
