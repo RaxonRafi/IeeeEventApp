@@ -7,6 +7,7 @@ const createEvent = async (payload: any) => {
         title: payload.title,
         subtitle: payload.subtitle,
         description: payload.description,
+        image_url: payload.image_url,
         date: payload.date,
         startTime: payload.startTime,
         endTime: payload.endTime,
