@@ -19,12 +19,13 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
 
 const getAllEvents = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const events = await EventService.getAllEvents();
+    const events = await EventService.getAllEvents(req.query);
     sendResponse(res, {
       success: true,
       statusCode: 200,
       message: "Events fetched successfully",
       data: events,
+      meta: { total: events.length }
     });
   } catch (err) {
     next(err);
