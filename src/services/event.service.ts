@@ -42,7 +42,11 @@ const createEvent = async (payload: any) => {
   
 
 const getAllEvents = async (queryParams: any = {}) => {
-  const { tags, venue, date, search, limit, offset } = queryParams;
+  const { tags, venue, date, search, limit, offset, page, pageSize } = queryParams;
+  
+  // Handle pagination - support both offset/limit and page/pageSize patterns
+  const take = limit ? parseInt(limit) : (pageSize ? parseInt(pageSize) : undefined);
+  const skip = offset ? parseInt(offset) : (page && pageSize ? (parseInt(page) - 1) * parseInt(pageSize) : undefined);
   
   // Build where clause dynamically
   const whereClause: any = {};
@@ -91,8 +95,14 @@ const getAllEvents = async (queryParams: any = {}) => {
       }
     ];
   }
-  
-  return await prisma.event.findMany({
+
+  // Get total count for pagination metadata
+  const totalCount = await prisma.event.count({
+    where: whereClause,
+  });
+
+  // Get the actual data
+  const events = await prisma.event.findMany({
     where: whereClause,
     include: {
       highlights: true,
@@ -103,9 +113,29 @@ const getAllEvents = async (queryParams: any = {}) => {
     orderBy: {
       date: "desc",
     },
-    take: limit ? parseInt(limit) : undefined,
-    skip: offset ? parseInt(offset) : undefined,
+    take: take,
+    skip: skip,
   });
+
+  // Calculate pagination metadata
+  const currentPage = page ? parseInt(page) : (skip && take ? Math.floor(skip / take) + 1 : 1);
+  const totalPages = take ? Math.ceil(totalCount / take) : 1;
+  const hasNextPage = take ? (skip || 0) + take < totalCount : false;
+  const hasPrevPage = (skip || 0) > 0;
+
+  return {
+    data: events,
+    pagination: {
+      total: totalCount,
+      count: events.length,
+      currentPage,
+      totalPages,
+      hasNextPage,
+      hasPrevPage,
+      limit: take,
+      offset: skip,
+    }
+  };
 };
 
 const getSingleEvent = async (id: number) => {
